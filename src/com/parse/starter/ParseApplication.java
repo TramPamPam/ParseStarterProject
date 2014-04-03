@@ -1,9 +1,8 @@
 package com.parse.starter;
 
-import com.parse.Parse;
-import com.parse.ParseACL;
-
-import com.parse.ParseUser;
+import android.content.Intent;
+import android.util.Log;
+import com.parse.*;
 
 import android.app.Application;
 
@@ -19,12 +18,17 @@ public class ParseApplication extends Application {
 
 		ParseUser.enableAutomaticUser();
 		ParseACL defaultACL = new ParseACL();
-	    
-		// If you would like all objects to be private by default, remove this line.
-		defaultACL.setPublicReadAccess(true);
+        ParseACL.setDefaultACL(defaultACL, true);
 
-		
-		ParseACL.setDefaultACL(defaultACL, true);
+        PushService.setDefaultPushCallback(this, ParseStarterProjectActivity.class);
+        defaultACL.setPublicReadAccess(true);
+
+        GetDataCallback getDataCallback = new GetDataCallback() {
+            @Override
+            public void done(byte[] bytes, ParseException e) {
+                Log.v("GOT", "something");
+            }
+        };
 	}
 
 }
