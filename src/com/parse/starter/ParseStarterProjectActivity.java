@@ -3,6 +3,7 @@ package com.parse.starter;
 import android.app.Activity;
 import android.os.Bundle;
 
+import android.util.Log;
 import com.parse.ParseAnalytics;
 
 public class ParseStarterProjectActivity extends Activity {
@@ -12,5 +13,7 @@ public class ParseStarterProjectActivity extends Activity {
 		setContentView(R.layout.main);
 
 		ParseAnalytics.trackAppOpened(getIntent());
-	}
+        Log.v("GOT","onCreate");
+
+    }
 }

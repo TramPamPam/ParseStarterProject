@@ -21,14 +21,17 @@ public class ParseApplication extends Application {
         ParseACL.setDefaultACL(defaultACL, true);
 
         PushService.setDefaultPushCallback(this, ParseStarterProjectActivity.class);
+
+//        startService();
+
         defaultACL.setPublicReadAccess(true);
 
-        GetDataCallback getDataCallback = new GetDataCallback() {
-            @Override
-            public void done(byte[] bytes, ParseException e) {
-                Log.v("GOT", "something");
-            }
-        };
+//        GetDataCallback getDataCallback = new GetDataCallback() {
+//            @Override
+//            public void done(byte[] bytes, ParseException e) {
+//                Log.v("GOT", "something");
+//            }
+//        };
 	}
 
 }

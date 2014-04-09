@@ -21,6 +21,13 @@
         android:name="ParseApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
+        <!--<service android:name=".NotificationService" android:enabled="true">-->
+            <!--<intent-filter >-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!--<action android:name="android.accessibilityservice.AccessibilityService"/>-->
+            <!--</intent-filter>-->
+        <!--</service>-->
         <activity
             android:name=".ParseStarterProjectActivity"
             android:label="@string/app_name" >
@@ -31,12 +38,12 @@
             </intent-filter>
         </activity>
         <service android:name="com.parse.PushService" />
-        <receiver android:name="com.parse.ParseBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="com.parse.ParseBroadcastReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
         <receiver android:name="com.parse.GcmBroadcastReceiver"
                   android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
@@ -49,10 +56,12 @@
                 <category android:name="com.parse.starter" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.starter.CustomReceiver">
-            <!--android:exported="false">-->
+        <receiver android:name="com.parse.starter.CustomReceiver"
+            android:exported="false">
             <intent-filter>
-                <!--<action android:name="com.example.UPDATE_STATUS" />-->
+                <action android:name="com.example.UPDATE_STATUS" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </receiver>
