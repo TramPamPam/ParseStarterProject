@@ -14,6 +14,7 @@ import android.widget.*;
 import com.parse.*;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class ParseStarterProjectActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.action_bar_menu, menu);
+        inflater.inflate(R.menu.menu, menu);
 
         MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
         // Gets the data repository in write mode
@@ -142,9 +143,9 @@ public class ParseStarterProjectActivity extends Activity {
                 else
                     Log.v("DBH", "not found parseObject :(");
 
-//                    Intent intent = new Intent(FeedListActivity.this, FeedDetailsActivity.class);
-//                    intent.putExtra("feed", newsData);
-//                    startActivity(intent);
+                Intent intent = new Intent(ParseStarterProjectActivity.this, EditorActivity.class);
+                intent.putExtra("obj", new SerializableParseObject(parseObject));
+                startActivity(intent);
             }
         });
     }
