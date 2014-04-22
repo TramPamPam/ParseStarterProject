@@ -22,10 +22,10 @@ public class ParseApplication extends Application {
 
         PushService.setDefaultPushCallback(this, ParseStarterProjectActivity.class);
 
-//        startService();
-
+        Intent intent = new Intent(this, NotificationService.class);
+        startService(intent);
         defaultACL.setPublicReadAccess(true);
-
+        ParseUser.enableAutomaticUser();
 //        GetDataCallback getDataCallback = new GetDataCallback() {
 //            @Override
 //            public void done(byte[] bytes, ParseException e) {

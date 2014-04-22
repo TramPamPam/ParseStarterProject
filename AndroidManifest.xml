@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.BIND_ACCESSIBILITY_SERVICE" />
     <permission android:protectionLevel="signature"
                 android:name="com.parse.starter.pushnotifications.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.parse.starter.pushnotifications.permission.C2D_MESSAGE" />
@@ -21,13 +22,18 @@
         android:name="ParseApplication"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <!--<service android:name=".NotificationService" android:enabled="true">-->
-            <!--<intent-filter >-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<action android:name="android.accessibilityservice.AccessibilityService"/>-->
-            <!--</intent-filter>-->
-        <!--</service>-->
+        <service android:name=".NotificationService"
+                 android:enabled="true"
+                 >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.accessibilityservice.AccessibilityService"/>
+            </intent-filter>
+            <meta-data
+                    android:name="android.accessibilityservice"
+                    android:resource="@xml/accessibilityservice" />
+        </service>
         <activity
             android:name=".ParseStarterProjectActivity"
             android:label="@string/app_name" >
@@ -56,15 +62,15 @@
                 <category android:name="com.parse.starter" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.parse.starter.CustomReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.example.UPDATE_STATUS" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </receiver>
+        <!--<receiver android:name="com.parse.starter.CustomReceiver"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.example.UPDATE_STATUS" />-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED" />-->
+                <!--<action android:name="android.intent.action.USER_PRESENT" />-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>
