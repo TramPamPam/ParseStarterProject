@@ -2,15 +2,17 @@ package com.parse.starter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.*;
 import com.parse.*;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +31,47 @@ public class ParseStarterProjectActivity extends Activity {
         startService(new Intent(this, NotificationService.class));
         progressbar = (ProgressBar) findViewById(R.id.progressBar);
 
+//        getActionBar().setTitle("Parse Demo");
+//
+////        getSupportActionBar().setIcon(R.drawable.ic_action_social_person);
+//        getActionBar().setHomeButtonEnabled(true);
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
+
         Log.v("FET","onCreate");
 //        createList();
 
         updateList();
 
-//        Log.v("FET","feedList "+feedList);
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_bar_menu, menu);
+
+        MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                Toast toast = Toast.makeText(getApplicationContext(), "Refreshing...",Toast.LENGTH_SHORT);
+                toast.show();
+
+                updateList();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public void createList(){
         for (int i = 0; i<10; i++){
@@ -62,7 +96,7 @@ public class ParseStarterProjectActivity extends Activity {
     };
 
 
-    public void updateList(){//(ArrayList<ParseObject> feedList) {
+    protected void updateList(){//(ArrayList<ParseObject> feedList) {
 
         feedListView = (ListView) findViewById(R.id.custom_list);
         feedListView.setVisibility(View.VISIBLE);
@@ -92,17 +126,27 @@ public class ParseStarterProjectActivity extends Activity {
         feedList = (ArrayList<ParseObject>) list;
         feedListView.setAdapter(new ParseObjectsListAdapter(this, feedList));
 
-//        feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> a, View v, int position,	long id) {
-//                    Object o = feedListView.getItemAtPosition(position);
-//                    ParseObject newsData = (ParseObject) o;
-//
+        feedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> a, View v, int position,	long id) {
+                Object o = feedListView.getItemAtPosition(position);
+                ParseObject parseObject = (ParseObject) o;
+
+                Log.v("DBH", "selected parseObject:");
+                Log.v("DBH", "... .getString(\"id\"):"+parseObject.getString("id"));
+                Log.v("DBH", "... .getString(\"title\"):"+parseObject.getString("title"));
+                Log.v("DBH", "... .getString(\"alert\"):"+parseObject.getString("alert"));
+                MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
+                if( mDbHelper.findById(parseObject.getString("id")) )
+                    Log.v("DBH", "found parseObject :)");
+                else
+                    Log.v("DBH", "not found parseObject :(");
+
 //                    Intent intent = new Intent(FeedListActivity.this, FeedDetailsActivity.class);
 //                    intent.putExtra("feed", newsData);
 //                    startActivity(intent);
-//        });
-
+            }
+        });
     }
 
     static void done(){

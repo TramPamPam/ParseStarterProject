@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, ParseStarterProjectActivity!</string>
     <string name="app_name">ParseStarterProject</string>
+    <string name="refresh">refresh</string>
 </resources>

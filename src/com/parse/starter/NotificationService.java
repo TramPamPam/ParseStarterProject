@@ -3,8 +3,11 @@ package com.parse.starter;
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Notification;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.Toast;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.SaveCallback;
@@ -17,27 +20,44 @@ public class NotificationService extends AccessibilityService {
         //Code when the event is caught
         Notification mNotification = (Notification) event.getParcelableData();
         ParseObject parseObject = new ParseObject("ReceivedPush");
-        parseObject.put("alert",mNotification.tickerText);
+        parseObject.put("id",String.format("0%d",mNotification.hashCode()));
+        parseObject.put("alert", mNotification.tickerText);
         parseObject.put("title","UPDATE_STATUS");
         parseObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException ex) {
                 if (ex == null) {
-                    Log.v("GOT","Saved ");
+                    Log.v("GOT", "Saved ");
+
                 } else {
                     // Отказ
-                    Log.v("GOT","Did not saved ");
+                    Log.v("GOT", "Did not saved cause: "+ex);
                 }
             }
         });
-        Log.v("GOT", "parseObject" + parseObject);
-//        Log.v("GOT","notif tickerText "+mNotification.tickerText);
-//        Log.v("GOT","notif toString() "+mNotification.toString());
-        Log.v("GOT","event.getText() "+event.getText());
-        Log.v("GOT","event "+event);
-//        Log.v("GOT","event.getAction() "+event.getAction());
 
+        //put an object to local data base:
+        MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
+        // Gets the data repository in write mode
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(MainDatabaseHelper.FeedEntry.COLUMN_NAME_ENTRY_ID, parseObject.getString("id"));
+        values.put(MainDatabaseHelper.FeedEntry.COLUMN_NAME_TITLE, parseObject.getString("title"));
+        values.put(MainDatabaseHelper.FeedEntry.COLUMN_NAME_CONTENT, parseObject.getString("alert"));
+
+        Log.v("DBH", "inserted parseObject:");
+        Log.v("DBH", "... .getString(\"id\"):"+parseObject.getString("id"));
+        Log.v("DBH", "... .getString(\"title\"):"+parseObject.getString("title"));
+        Log.v("DBH", "... .getString(\"alert\"):"+parseObject.getString("alert"));
+        // Insert the new row, returning the primary key value of the new row
+        long newRowId;
+        newRowId = db.insert(
+                MainDatabaseHelper.FeedEntry.TABLE_NAME,
+                null,
+                values);
     }
+
     @Override
     public void onInterrupt() {
         // TODO Auto-generated method stub.
