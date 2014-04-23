@@ -7,4 +7,5 @@
     <string name="delete">delete</string>
     <string name="hint_title">title</string>
     <string name="hint_alert">alert</string>
+    <string name="search">search...</string>
 </resources>

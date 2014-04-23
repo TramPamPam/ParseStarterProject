@@ -36,9 +36,7 @@ public class NotificationService extends AccessibilityService {
             }
         });
 
-        //put an object to local data base:
         MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
-        // Gets the data repository in write mode
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -46,11 +44,6 @@ public class NotificationService extends AccessibilityService {
         values.put(MainDatabaseHelper.FeedEntry.COLUMN_NAME_TITLE, parseObject.getString("title"));
         values.put(MainDatabaseHelper.FeedEntry.COLUMN_NAME_CONTENT, parseObject.getString("alert"));
 
-        Log.v("DBH", "inserted parseObject:");
-        Log.v("DBH", "... .getString(\"id\"):"+parseObject.getString("id"));
-        Log.v("DBH", "... .getString(\"title\"):"+parseObject.getString("title"));
-        Log.v("DBH", "... .getString(\"alert\"):"+parseObject.getString("alert"));
-        // Insert the new row, returning the primary key value of the new row
         long newRowId;
         newRowId = db.insert(
                 MainDatabaseHelper.FeedEntry.TABLE_NAME,
@@ -77,6 +70,5 @@ public class NotificationService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.v("GOT","onServiceConnected");
     }
 }

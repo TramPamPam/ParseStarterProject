@@ -69,6 +69,12 @@ public class ParseStarterProjectActivity extends Activity {
 
                 updateList();
                 return true;
+            case R.id.search:
+                Intent intent = new Intent(ParseStarterProjectActivity.this, SearchableActivity.class);
+                ArrayList<SerializableParseObject> serializableParseObjects= SerializableParseObject.makeSerializableList(feedList);
+                intent.putExtra("feed", serializableParseObjects);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

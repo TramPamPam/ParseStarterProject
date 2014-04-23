@@ -4,6 +4,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SerializableParseObject implements Serializable {
@@ -84,5 +85,12 @@ public class SerializableParseObject implements Serializable {
 
     public String getObjectId() {
         return objectId;
+    }
+    static ArrayList<SerializableParseObject> makeSerializableList(ArrayList<ParseObject> list){
+        ArrayList<SerializableParseObject> serializableParseObjects = new ArrayList<SerializableParseObject>();
+        for (ParseObject object: list){
+            serializableParseObjects.add(new SerializableParseObject(object));
+        }
+        return serializableParseObjects;
     }
 }
