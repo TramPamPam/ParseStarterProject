@@ -1,5 +1,6 @@
 package com.parse.starter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -63,8 +64,8 @@ public class MainDatabaseHelper extends SQLiteOpenHelper{
     public boolean findById(String id){
 
         MainDatabaseHelper mDbHelper = this;
-        String sortOrder = MainDatabaseHelper.FeedEntry._ID + " DESC";
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        String sortOrder = MainDatabaseHelper.FeedEntry._ID + " DESC";
         String[] projection = {
                 MainDatabaseHelper.FeedEntry._ID,
                 MainDatabaseHelper.FeedEntry.COLUMN_NAME_ENTRY_ID,
@@ -72,18 +73,6 @@ public class MainDatabaseHelper extends SQLiteOpenHelper{
         };
         String selection = MainDatabaseHelper.FeedEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
         String[] selectionArgs = { id };
-        if (projection == null){
-            Log.v("DBH","projection is null!");
-            return false;
-        }
-        else if (selection == null){
-            Log.v("DBH","selection is null!");
-            return false;
-        }
-        else if (selectionArgs == null){
-            Log.v("DBH","selectionArgs is null!");
-            return false;
-        }  else {
 
         Cursor c = db.query(
                 MainDatabaseHelper.FeedEntry.TABLE_NAME,  // The table to query
@@ -95,7 +84,21 @@ public class MainDatabaseHelper extends SQLiteOpenHelper{
                 sortOrder              // The sort order
         );
         return c.moveToFirst();
-        }
     }
 
+    public boolean updateObject(String rowId, String title, String alert) {
+        MainDatabaseHelper mDbHelper = this;
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues args = new ContentValues();
+        args.put(FeedEntry.COLUMN_NAME_TITLE, title);
+        args.put(FeedEntry.COLUMN_NAME_CONTENT, alert);
+        return db.update(FeedEntry.TABLE_NAME, args, FeedEntry.COLUMN_NAME_ENTRY_ID + "=" + rowId, null) > 0;
+    }
+    public boolean deleteObject(String rowId) {
+        MainDatabaseHelper mDbHelper = this;
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        return db.delete(FeedEntry.TABLE_NAME, FeedEntry.COLUMN_NAME_ENTRY_ID + "=" + rowId, null) > 0;
+    }
 }

@@ -9,11 +9,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.parse.GetCallback;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
+import com.parse.*;
 
 public class EditorActivity extends Activity {
     private SerializableParseObject selectedItem;
@@ -75,10 +71,6 @@ public class EditorActivity extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.editor_menu, menu);
 
-        MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
-        // Set up ShareActionProvider's default share intent
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -98,6 +90,8 @@ public class EditorActivity extends Activity {
                         if (object != null) {
                             try {
                                 object.delete();
+                                MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
+                                mDbHelper.deleteObject(object.getObjectId());
                                 Log.v("EDT", "deleted");
                             } catch (ParseException e1) {
                                 Log.v("EDT", ""+e1);
@@ -133,16 +127,26 @@ public class EditorActivity extends Activity {
             @Override
             public void done(ParseObject object, ParseException e) {
 
-                Log.v("EDT", "got " + object.getString("alert"));
+                Log.v("EDT", "got " + object.getObjectId());
                 if (object != null) {
-                    object.put("title",titleTextView.getText());
-                    object.put("alert",alertTextView.getText());
+                    object.put("title",titleTextView.getText().toString());
+                    object.put("alert",alertTextView.getText().toString());
+                    object.saveInBackground(new SaveCallback() {
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                progressBar.setVisibility(View.GONE);
+                            } else {
+                                Log.v("EDT", "update failed cause "+e);
+                            }
+                        }
+                    });
                 } else {
                     Log.v("EDT", "got nothing");
                 }
-                progressBar.setVisibility(View.GONE);
             }
         });
+        MainDatabaseHelper mDbHelper = MainDatabaseHelper.getInstance(getApplicationContext());
+        mDbHelper.updateObject(myID,titleTextView.getText().toString(),alertTextView.getText().toString());
 
     }
 
